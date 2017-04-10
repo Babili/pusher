@@ -1,4 +1,4 @@
-Projector = require("happn-js").Projector
+Projector = require("happn").Projector
 
 class MessageProjector extends Projector
   constructor: (@app) ->

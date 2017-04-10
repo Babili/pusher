@@ -1,10 +1,10 @@
 SocketServer     = require "./server/socket_server"
 Logger           = require "./logger"
-Happn            = require("happn-js").Happn
+Happn            = require("happn").Happn
 MessageProjector = require "./server/message_projector"
 
 class App
-  constructor: (@config, @ravenClient) ->
+  constructor: (@config) ->
     @logger           = new Logger
     @socketServer     = new SocketServer @
     @happn            = new Happn @logger

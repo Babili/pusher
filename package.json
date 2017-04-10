@@ -13,13 +13,13 @@
     "jsonwebtoken": "7.2.1",
     "pusher": "1.5.1",
     "q": "1.4.1",
-    "raven": "1.1.1",
+    "raven": "1.2.1",
     "redis": "2.6.5",
     "request": "2.79.0",
     "socket.io": "1.7.2",
     "socketio-jwt": "4.5.0",
     "uuid": "3.0.1",
-    "happn-js": "git+https://github.com/crepesourcing/happn-js.git"
+    "happn": "git+https://github.com/crepesourcing/happn-js.git"
   },
   "scripts": {
     "start": "node babili_pusher.js"

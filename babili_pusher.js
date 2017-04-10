@@ -1,15 +1,16 @@
 require('coffee-script').register();
-var raven = require("raven");
+var Raven = require("raven");
 var path  = require("path");
 var App   = require("./app/app");
 
 var configPath = path.join(__dirname, "config", "config");
 var env        = process.env.NODE_ENV || "development";
 var config     = require(configPath)[env];
-var ravenClient = new raven.Client(config.sentryDsn);
-// ravenClient.patchGlobal();
+var app        = new App(config);
 
-var app        = new App(config, ravenClient);
+if (config.sentryDsn) {
+  Raven.config(config.sentryDsn).install();
+}
 
 app.start(function(err) {
   if (err) throw err;
