@@ -1,0 +1,11 @@
+.git
+.ruby-*
+/log/*
+!/log/.keep
+/tmp
+.DS_Store
+dump.rdb
+npm-debug.log
+.gitignore
+node_modules
+*.log

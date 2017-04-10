@@ -1,0 +1,35 @@
+{
+  "name": "babili-pusher",
+  "description": "Handle socket.io live stream for Babili.",
+  "author": "Spin42 <info@spin42.com>",
+  "private": true,
+  "version": "0.1.0",
+  "dependencies": {
+    "amqplib": "0.5.1",
+    "bunyan": "1.8.5",
+    "coffee-script": "1.12.3",
+    "devnull": "0.0.12",
+    "har-validator": "4.2.0",
+    "jsonwebtoken": "7.2.1",
+    "pusher": "1.5.1",
+    "q": "1.4.1",
+    "raven": "1.1.1",
+    "redis": "2.6.5",
+    "request": "2.79.0",
+    "socket.io": "1.7.2",
+    "socketio-jwt": "4.5.0",
+    "uuid": "3.0.1",
+    "happn-js": "git+https://github.com/crepesourcing/happn-js.git"
+  },
+  "scripts": {
+    "start": "node babili_pusher.js"
+  },
+  "engines": {
+    "node": "5.4.1",
+    "npm": "3.3.12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/babili/pusher"
+  }
+}
