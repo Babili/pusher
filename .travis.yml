@@ -5,7 +5,7 @@ language: ruby
 branches:
   only:
     - master
-    - development
+    - dev
 
 services:
   - docker
