@@ -1,8 +1,22 @@
-FROM node:6-onbuild
+FROM node:12.12.0
+
+RUN mkdir -p /usr/src/app && \
+  groupadd -r babili && useradd -r -g babili babili && \
+  mkdir -p /home/babili && chown babili:babili /home/babili && \
+  chown -R babili:babili /usr/src/app
+
+COPY package.json package.json
+COPY package-lock.json package-lock.json
+RUN npm i
+
+WORKDIR /usr/src/app
+USER babili
+
+COPY app app
+COPY config config
+COPY babili_pusher.js babili_pusher.js
 
 ARG APP_ENV=development
 ENV NODE_ENV ${APP_ENV}
-
-VOLUME "/usr/src/app/node_modules"
 
 CMD ["npm", "start"]
