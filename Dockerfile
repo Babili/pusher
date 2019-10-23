@@ -5,12 +5,12 @@ RUN mkdir -p /usr/src/app && \
   mkdir -p /home/babili && chown babili:babili /home/babili && \
   chown -R babili:babili /usr/src/app
 
+WORKDIR /usr/src/app
+USER babili
+
 COPY package.json package.json
 COPY package-lock.json package-lock.json
 RUN npm i
-
-WORKDIR /usr/src/app
-USER babili
 
 COPY app app
 COPY config config
