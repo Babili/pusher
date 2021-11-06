@@ -1,4 +1,4 @@
-FROM node:14.15.0
+FROM node:14.18.1
 
 RUN mkdir -p /usr/src/app && \
   groupadd -r babili && useradd -r -g babili babili && \
