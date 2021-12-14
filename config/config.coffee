@@ -9,4 +9,5 @@ defaultConfiguration =
 
 module.exports =
   development: defaultConfiguration
+  qa: defaultConfiguration
   production: defaultConfiguration
