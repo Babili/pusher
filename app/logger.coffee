@@ -1,15 +1,27 @@
-winston  = require "winston"
+winston     = require "winston"
+environment = process.env.NODE_ENV || "development";
+
+formatter   = winston.format.printf((log) ->
+  levelName = log.level.toUpperCase().padEnd(5, " ")
+  applicationName = "babili-pusher"
+  thread = "main"
+  context = ""
+  userContext = ""
+  "[#{log.timestamp}] [#{levelName}] [#{applicationName}] [#{environment}] [#{thread}] [#{context}] [#{userContext}] #{log.message}"
+)
 
 class Logger
   constructor: ->
     @logger = winston.createLogger
       name: "BabiliPusher"
       level: "debug"
-
-    if process.env.NODE_ENV == "development"
-      @logger.add new winston.transports.Console
-        format: winston.format.simple()
-
+      format: winston.format.combine(
+        winston.format.timestamp()
+        formatter
+      )
+      transports: [
+        new winston.transports.Console({ level: "info" })
+      ]
     this
 
   debug: (message) ->
