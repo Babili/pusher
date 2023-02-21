@@ -1,14 +1,15 @@
 # Changelog
 
-## 1.1.1 [2023-02-21]
+## 2.0.0 [2023-02-21]
 
+* Rewrite the project with javascript (instead of coffeescript)
 * Update dependencies
     * `uuid` to `9.0.0`
     * `jsonwebtoken` to `9.0.0`
     * `amqplib` to `0.10.3`
     * `socket.io` to `4.6.1`
     * `redis` to `4.6.4`
-    * `coffeescript` to `2.7.0`
+    * `node` to `19.6.1`
 * Replace `raven` with `sentry`
 * Return Strict-Transport-Security header when the environment variable `HSTS_HEADER` is set
 

@@ -1,19 +1,19 @@
-require('coffeescript/register');
-var Sentry = require("@sentry/node");
-var path   = require("path");
-var App    = require("./app/app");
+import * as Sentry from "@sentry/node";
+import { App } from "./app/app.js";
+import { configuration } from "./config/config.js";
 
-var configPath = path.join(__dirname, "config", "config");
-var env        = process.env.NODE_ENV || "development";
-var config     = require(configPath)[env];
-var app        = new App(config);
+const start = async() => {
+  const env = process.env.NODE_ENV || "development";
+  const app = new App(configuration);
 
-if (config.sentryDsn) {
-  Sentry.init({
-    dsn: config.sentryDsn
-  });
-}
+  if (configuration.sentryDsn) {
+    Sentry.init({
+      dsn: configuration.sentryDsn,
+      environment: env
+    });
+  }
 
-app.start(function(err) {
-  if (err) throw err;
-});
+  await app.start();
+};
+
+start();
