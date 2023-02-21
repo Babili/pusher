@@ -14,6 +14,7 @@ class App
 
   start: (callback) ->
     self = @
+    await @socketServer.connect()
     @socketServer.start (err) =>
       throw err if err?
       @happn.init([@messageProjector])

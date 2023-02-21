@@ -2,8 +2,12 @@ redis = require "redis"
 
 class SocketStore
   constructor: (@app) ->
-    @redisPresenceStore = redis.createClient @app.config.redis.url
+    @redisPresenceStore = redis.createClient
+      url: @app.config.redis.url
     @store              = {}
+  
+  connect: ->
+    @redisPresenceStore.connect()
 
   key: (userId, platformId) ->
     "#{userId}_#{platformId}"

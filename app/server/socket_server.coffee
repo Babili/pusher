@@ -15,6 +15,7 @@ class SocketServer
   authorization: (handshakeData, callback) =>
     jwtToken        = handshakeData.handshake.query.token
     decodedJwtToken = jwt.decode jwtToken
+    console.log("coucou")
     if decodedJwtToken and decodedJwtToken.data.platformId
       @platformStore.get decodedJwtToken.data.platformId, (err, platformAttributes) =>
         return callback err if err
@@ -26,9 +27,19 @@ class SocketServer
     else
       callback null, false
 
+  connect: ->
+    @socketStore.connect()
+
   start: (callback) ->
     @io = IO()
     @io.use @authorization
+    
+    console.log("pouet")
+    console.log(@io)
+
+    @io.on "headers", (headers) ->
+      @logger.info "REQUEST HEADERS"
+      headers["Strict-Transport-Security"] = @app.config.headers.hstsHeader if @app.config.headers.hstsHeader
 
     @io.sockets.on "connection", (socket) =>
       userId     = socket.decoded_token.sub
@@ -38,7 +49,7 @@ class SocketServer
         return callback err if err
         @logger.info "User <#{userId}> just logged in"
         socket.emit "connected", deviceSessionId: socket.deviceSessionId
-
+      
       socket.on "ping", ->
         socket.emit "pong", {}
 
