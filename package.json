@@ -3,27 +3,33 @@
   "description": "Handle socket.io live stream for Babili.",
   "author": "Spin42 <info@spin42.com>, Commuty <info@commuty.net>",
   "private": true,
-  "version": "1.1.1",
+  "version": "2.0.0",
+  "type": "module",
   "dependencies": {
-    "amqplib": "0.8.0",
-    "coffee-script": "1.12.7",
+    "amqplib": "0.10.3",
     "happn": "git+https://github.com/crepesourcing/happn-js.git",
-    "jsonwebtoken": "8.5.1",
-    "q": "1.5.1",
-    "raven": "2.6.4",
-    "redis": "3.1.2",
-    "request": "2.88.2",
-    "socket.io": "4.3.1",
+    "jsonwebtoken": "9.0.0",
+    "node-fetch": "3.3.0",
+    "redis": "4.6.4",
+    "socket.io": "4.6.1",
     "socketio-jwt": "4.6.2",
-    "uuid": "8.3.2",
-    "winston": "3.3.3"
+    "uuid": "9.0.0",
+    "winston": "3.8.2"
+  },
+  "devDependencies": {
+    "@sentry/node": "7.38.0",
+    "eslint": "^8.34.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.6.1",
+    "eslint-plugin-promise": "^6.1.1"
   },
   "scripts": {
-    "start": "node babili_pusher.js"
+    "start": "node babili_pusher.js",
+    "lint": "eslint ."
   },
   "engines": {
-    "node": "5.4.1",
-    "npm": "3.3.12"
+    "node": "14.18.1"
   },
   "repository": {
     "type": "git",
