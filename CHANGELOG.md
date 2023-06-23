@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.1 [2023-06-23]
+
+* Parse the event's timestamp to always send an ISO8701 formatted string in `createdAt`
+* Upgrade docker to `node:18.13-buster`
+* Upgrade dependencies
+
 ## 2.0.0 [2023-02-21]
 
 * Rewrite the project with javascript (instead of coffeescript)

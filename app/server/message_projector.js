@@ -32,8 +32,24 @@ export class MessageProjector extends Projector {
       contentType: event.changeAfter("contentType"),
       platformId: event.userMetadataFor("platformId"),
       deviceSessionId: event.changeAfter("deviceSessionId"),
-      createdAt: event.timestamp()
+      createdAt: this._sanitizeDate(event.timestamp())
     };
+  }
+
+  _sanitizeDate(date) {
+    if (date) {
+      var sanitizedDate = date;
+      if (sanitizedDate.endsWith(" UTC")) {
+        sanitizedDate = sanitizedDate.replace(" UTC", "Z");
+      }
+      const indexBetweenDateAndTime = 10;
+      if (sanitizedDate.length > indexBetweenDateAndTime && sanitizedDate.charAt(indexBetweenDateAndTime) === " ") {
+        sanitizedDate = sanitizedDate.substring(0, indexBetweenDateAndTime) + "T" + sanitizedDate.substring(indexBetweenDateAndTime + 1);
+      }
+      return sanitizedDate;
+    } else {
+      return null;
+    }
   }
 
   _send(message, socketServer) {

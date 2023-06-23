@@ -1,4 +1,4 @@
-FROM node:14.18.1
+FROM node:18.13-buster
 
 RUN mkdir -p /usr/src/app && \
   groupadd -r babili && useradd -r -g babili babili && \
@@ -10,7 +10,7 @@ USER babili
 
 COPY package.json package.json
 COPY package-lock.json package-lock.json
-RUN npm i
+RUN npm i --no-save
 
 COPY app app
 COPY config config
