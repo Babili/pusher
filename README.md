@@ -33,13 +33,13 @@ Since Travis is not supported, builds can be deployed with:
 
 ```
 $ docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-$ docker build --pull --build-arg APP_ENV=production -t babili/pusher:production-latest -t babili/pusher:production-`git rev-parse HEAD` . && \
+$ docker build --platform linux/amd64 --pull --build-arg APP_ENV=production -t babili/pusher:production-latest -t babili/pusher:production-`git rev-parse HEAD` . && \
   docker push babili/pusher:production-`git rev-parse HEAD` && \
   docker push babili/pusher:production-latest && \
-  docker build --pull --build-arg APP_ENV=qa -t babili/pusher:qa-latest -t babili/pusher:qa-`git rev-parse HEAD` . && \
+  docker build --platform linux/amd64 --pull --build-arg APP_ENV=qa -t babili/pusher:qa-latest -t babili/pusher:qa-`git rev-parse HEAD` . && \
   docker push babili/pusher:qa-`git rev-parse HEAD` && \
   docker push babili/pusher:qa-latest && \
-  docker build --pull --build-arg APP_ENV=development -t babili/pusher:development-latest -t babili/pusher:development-`git rev-parse HEAD` . && \
+  docker build --platform linux/amd64 --pull --build-arg APP_ENV=development -t babili/pusher:development-latest -t babili/pusher:development-`git rev-parse HEAD` . && \
   docker push babili/pusher:development-`git rev-parse HEAD` && \
   docker push babili/pusher:development-latest
 ```
