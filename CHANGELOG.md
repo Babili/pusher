@@ -13,6 +13,8 @@
     * `socket.io` from `4.7.0` to `4.8.1`
     * `uuid` from `9.0.0` to `11.1.0`
     * `winston` from `3.9.0` to `3.17.0`
+* Support for Tokens exchanged through the handshake payload (instead of the query parameters)
+* Deprecation: Use of query parameters to exchange the handshake token must be replaced with the `auth` attribute.
 
 ## 2.0.1 [2023-06-23]
 

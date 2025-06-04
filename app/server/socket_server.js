@@ -15,7 +15,7 @@ export class SocketServer {
   }
 
   async authorization(handshakeData, callback) {
-    const jwtToken = handshakeData.handshake.query.token;
+    const jwtToken = handshakeData.handshake.auth?.token || handshakeData.handshake.query?.token;
     const decodedJwtToken = jwt.decode(jwtToken);
     if (decodedJwtToken?.data?.platformId) {
       const platformAttributes = await this.platformStore.get(decodedJwtToken.data.platformId);
