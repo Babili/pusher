@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.2 [2025-06-04]
+
+* Upgrade node to `22.6.0`
+* Upgrade ESLint to `9.26.0`
+
 ## 2.0.1 [2023-06-23]
 
 * Parse the event's timestamp to always send an ISO8701 formatted string in `createdAt`

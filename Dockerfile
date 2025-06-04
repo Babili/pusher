@@ -1,4 +1,4 @@
-FROM node:18.13-buster
+FROM node:22.6.0-bookworm
 
 RUN mkdir -p /usr/src/app && \
   groupadd -r babili && useradd -r -g babili babili && \
