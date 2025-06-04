@@ -3,7 +3,16 @@
 ## 2.0.2 [2025-06-04]
 
 * Upgrade node to `22.6.0`
-* Upgrade ESLint to `9.26.0`
+* Upgrade ESLint to `9.28.0`
+* Upgrade dependencies:
+    * `amqplib` from `0.10.3` to `0.10.8`
+    * `jsonwebtoken` from `9.0.0` to `9.0.2`
+    * `node-fetch` from `3.3.1` to `3.3.2`
+    * `redis` from `4.6.7` to `5.5.5`
+    * `socket.io` from `4.7.0` to `4.8.1`
+    * `socket.io` from `4.7.0` to `4.8.1`
+    * `uuid` from `9.0.0` to `11.1.0`
+    * `winston` from `3.9.0` to `3.17.0`
 
 ## 2.0.1 [2023-06-23]
 
