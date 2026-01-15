@@ -3,24 +3,23 @@
   "description": "Handle socket.io live stream for Babili.",
   "author": "Spin42 <info@spin42.com>, Commuty <info@commuty.net>",
   "private": true,
-  "version": "2.0.2",
+  "version": "2.0.3",
   "type": "module",
   "dependencies": {
-    "amqplib": "0.10.8",
+    "amqplib": "0.10.9",
     "happn": "git+https://github.com/crepesourcing/happn-js.git",
-    "jsonwebtoken": "9.0.2",
+    "jsonwebtoken": "9.0.3",
     "node-fetch": "3.3.2",
     "redis": "5.5.5",
-    "socket.io": "4.8.1",
-    "socketio-jwt": "4.6.2",
+    "socket.io": "4.8.3",
     "uuid": "11.1.0",
-    "winston": "3.17.0"
+    "winston": "3.19.0"
   },
   "devDependencies": {
-    "@sentry/node": "9.25.1",
-    "eslint": "9.28.0",
-    "eslint-plugin-import": "2.31.0",
-    "eslint-plugin-n": "17.19.0",
+    "@sentry/node": "9.47.1",
+    "eslint": "9.39.2",
+    "eslint-plugin-import": "2.32.0",
+    "eslint-plugin-n": "17.23.2",
     "eslint-plugin-promise": "7.2.1",
     "eslint-plugin-unused-imports": "4.1.4"
   },

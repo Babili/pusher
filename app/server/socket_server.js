@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 
 import { Server } from "socket.io";
-import { authorize } from "socketio-jwt";
 import { v4 as uuidv4 } from "uuid";
 import { PlatformStore } from "./platform_store.js";
 import { SocketStore } from "./socket_store.js";
@@ -14,37 +13,61 @@ export class SocketServer {
     this.platformStore = new PlatformStore(app);
   }
 
-  async authorization(handshakeData, callback) {
-    const jwtToken = handshakeData.handshake.auth?.token || handshakeData.handshake.query?.token;
-    const decodedJwtToken = jwt.decode(jwtToken);
-    if (decodedJwtToken?.data?.platformId) {
-      const platformAttributes = await this.platformStore.get(decodedJwtToken.data.platformId);
-      return authorize({
-        secret: platformAttributes.userRsaPublic,
-        timeout: 15000,
-        handshake: true
-      })(handshakeData, callback);
-    } else {
-      return callback(null, false);
-    }
-  }
-
   async connect() {
     return await this.socketStore.connect();
   }
 
   start() {
     this.io = new Server();
-    this.io.use((socket, next) => this.authorization(socket, next));
+
+    this.io.use((socket, next) => this._authenticateSocketConnection(socket, next));
 
     this.io.sockets.on("connection", (socket) => this._handleSocketConnection(socket));
 
     this.io.listen(this.app.config.port);
   }
 
+  async _authenticateSocketConnection(socket, next) {
+    const token = socket.handshake?.auth?.token || socket.handshake?.query?.token;
+    if (token) {
+      const secret = await this._fetchPublicSecret(token);
+      jwt.verify(token, secret, this._jwtVerificationOptions(), (err, decoded) => {
+        if (err) {
+          return next(new Error("Authentication error"));
+        }
+
+        socket.decodedToken = decoded;
+        next();
+      });
+    } else {
+      next(new Error("Authentication error"));
+    }
+  }
+
+  _jwtVerificationOptions() {
+    const options = {
+      algorithms: this.app.config.authentication.jwtAlgorithms
+    };
+    const audience = this.app.config.authentication.jwtAudience;
+    if (audience) {
+      options.audience = audience;
+    }
+    return options;
+  }
+
+  async _fetchPublicSecret(jwtToken) {
+    const decodedJwtToken = jwt.decode(jwtToken);
+    if (decodedJwtToken?.data?.platformId) {
+      const platformAttributes = await this.platformStore.get(decodedJwtToken.data.platformId);
+      return platformAttributes.userRsaPublic;
+    } else {
+      return null;
+    }
+  }
+
   async _handleSocketConnection(socket) {
-    const userId = socket.decoded_token.sub;
-    const platformId = socket.decoded_token.data.platformId;
+    const userId = socket.decodedToken.sub;
+    const platformId = socket.decodedToken.data.platformId;
     socket.deviceSessionId = uuidv4();
     await this.socketStore.add(userId, platformId, socket);
     this.logger.info(`User <${userId}> just logged in`);
