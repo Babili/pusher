@@ -31,7 +31,7 @@ export class SocketServer {
     const token = socket.handshake?.auth?.token || socket.handshake?.query?.token;
     if (token) {
       const secret = await this._fetchPublicSecret(token);
-      jwt.verify(token, secret, (err, decoded) => {
+      jwt.verify(token, secret, this._jwtVerificationOptions(), (err, decoded) => {
         if (err) {
           return next(new Error("Authentication error"));
         }
@@ -42,6 +42,17 @@ export class SocketServer {
     } else {
       next(new Error("Authentication error"));
     }
+  }
+
+  _jwtVerificationOptions() {
+    const options = {
+      algorithms: this.app.config.authentication.jwtAlgorithms
+    };
+    const audience = this.app.config.authentication.jwtAudience;
+    if (audience) {
+      options.audience = audience;
+    }
+    return options;
   }
 
   async _fetchPublicSecret(jwtToken) {

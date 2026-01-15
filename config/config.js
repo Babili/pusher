@@ -10,5 +10,9 @@ export const configuration = {
   },
   redis: {
     url: process.env.REDIS_URL
+  },
+  authentication: {
+    jwtAudience: process.env.JWT_AUDIENCE,
+    jwtAlgorithms: (process.env.JWT_ALGORITHMS && process.env.JWT_ALGORITHMS.split(",")) || ["RS256"]
   }
 };
