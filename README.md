@@ -22,6 +22,8 @@ Clockwork is a small trigger service to replace cron in a Docker environment.
 | `RABBITMQ_USER` | `""`| String | Required | | `"root"` |
 | `RABBITMQ_PASSWORD` | `""`| String | Required | | `"root"` |
 | `RABBITMQ_QUEUE_NAME` | `""`| String | Required | | `"babili-event-pusher"` |
+| `JWT_ALGORITHMS` | `"RS256"`| String | Optional |  The list of allowed JWT algorithms for JWT token verification | `"RS256, RS512"` |
+| `JWT_AUDIENCE` | `""`| String | Optional | The allowed JWT audience for JWT token verification | `"user"` |
 
 ## Contributors
 
