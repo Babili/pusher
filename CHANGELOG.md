@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.0.3 [2026-01-15]
+
+* Fix JWT token exchange handshake
+* Add configurable JWT verification options (audience and algorithms)
+* Remove `socketio-jwt` dependency
+* Upgrade dependencies:
+    * `amqplib` from `0.10.8` to `0.10.9`
+    * `jsonwebtoken` from `9.0.2` to `9.0.3`
+    * `socket.io` from `4.8.1` to `4.8.3`
+    * `winston` from `3.17.0` to `3.19.0`
+* Upgrade dev dependencies:
+    * `@sentry/node` from `9.25.1` to `9.47.1`
+    * `eslint` from `9.28.0` to `9.39.2`
+    * `eslint-plugin-import` from `2.31.0` to `2.32.0`
+    * `eslint-plugin-n` from `17.19.0` to `17.23.2`
+
+
 ## 2.0.2 [2025-06-04]
 
 * Upgrade node to `22.6.0`
