@@ -30,7 +30,13 @@ export class SocketServer {
   async _authenticateSocketConnection(socket, next) {
     const token = socket.handshake?.auth?.token || socket.handshake?.query?.token;
     if (token) {
-      const secret = await this._fetchPublicSecret(token);
+      let secret;
+      try {
+        secret = await this._fetchPublicSecret(token);
+      } catch (error) {
+        this.logger.warn(`Unable to fetch the platform public key: ${error.message}`);
+        return next(new Error("Authentication error"));
+      }
       jwt.verify(token, secret, this._jwtVerificationOptions(), (err, decoded) => {
         if (err) {
           return next(new Error("Authentication error"));

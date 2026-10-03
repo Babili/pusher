@@ -10,8 +10,8 @@ export class App {
     this.socketServer = new SocketServer(this);
     this.happn = new Happn(this.logger);
     this.messageProjector = new MessageProjector(this);
-    process.once("SIGINT", this.stop);
-    process.once("SIGTERM", this.stop);
+    process.once("SIGINT", () => this.stop());
+    process.once("SIGTERM", () => this.stop());
   }
 
   async start() {

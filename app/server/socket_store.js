@@ -10,7 +10,7 @@ export class SocketStore {
   }
 
   async connect() {
-    this.redisPresenceStore.on("error", (err) => this.app.logger.error(`Error with Redis: ${err}`));
+    this.redisPresenceStore.on("error", (err) => this.app.logger.err(`Error with Redis: ${err}`));
     return await this.redisPresenceStore.connect();
   }
 
