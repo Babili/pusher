@@ -20,7 +20,9 @@ export default [
     languageOptions: {
       globals: {
         process: "readonly",
-        setTimeout: "readonly"
+        setTimeout: "readonly",
+        setInterval: "readonly",
+        clearInterval: "readonly"
       }
     },
     rules: {

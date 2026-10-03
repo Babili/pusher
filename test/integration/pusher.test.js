@@ -1,56 +1,16 @@
 import assert from "node:assert/strict";
 import { Buffer } from "node:buffer";
-import { randomUUID } from "node:crypto";
 import { after, afterEach, before, describe, it } from "node:test";
-import { clearTimeout } from "node:timers";
-import amqp from "amqplib";
-import { createClient } from "redis";
 import { io as connectClient } from "socket.io-client";
 import { App } from "../../app/app.js";
+import { connectDependencies, redisUrl, uniqueQueueName, waitFor, waitUntil } from "../support/dependencies.js";
 import { startFakeEngine } from "../support/fake_engine.js";
 import { createMessageEvent, otherKeys, platformId, publicKey, signToken } from "../support/fixtures.js";
 
 const otherPlatformId = "platform-2";
 const createMessageRoutingKey = "new.BabiliEngine.entity_change.create message";
-const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
-process.env.RABBITMQ_USER ||= "guest";
-process.env.RABBITMQ_PASSWORD ||= "guest";
-process.env.RABBITMQ_EXCHANGE_NAME = `babili-pusher-test-${randomUUID()}`;
-process.env.RABBITMQ_QUEUE_NAME = `babili-pusher-test-${randomUUID()}`;
-const rabbitMqUrl = `amqp://${process.env.RABBITMQ_USER}:${process.env.RABBITMQ_PASSWORD}@${process.env.RABBITMQ_HOST || "localhost"}:${process.env.RABBITMQ_PORT || 5672}`;
-
-function waitFor(socket, eventName, timeoutMs = 5000) {
-  return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error(`No '${eventName}' received within ${timeoutMs}ms`)), timeoutMs);
-    socket.once(eventName, (payload) => {
-      clearTimeout(timer);
-      resolve(payload);
-    });
-  });
-}
-
-async function waitUntil(condition, timeoutMs = 5000) {
-  const deadline = Date.now() + timeoutMs;
-  while (!(await condition())) {
-    if (Date.now() > deadline) {
-      throw new Error("Condition not met in time");
-    }
-    await new Promise((resolve) => setTimeout(resolve, 50));
-  }
-}
-
-async function connectDependencies() {
-  const redis = createClient({ url: redisUrl, socket: { reconnectStrategy: false } });
-  redis.on("error", () => {});
-  try {
-    await redis.connect();
-    const rabbitMq = await amqp.connect(rabbitMqUrl);
-    return { redis, rabbitMq };
-  } catch (error) {
-    redis.destroy();
-    throw new Error(`Redis and RabbitMQ must be running for integration tests (docker compose -f docker-compose.test.yml up -d): ${error.message}`, { cause: error });
-  }
-}
+const hstsHeader = "max-age=31536000";
+process.env.RABBITMQ_QUEUE_NAME = uniqueQueueName();
 
 describe("babili-pusher", () => {
   let app;
@@ -89,8 +49,8 @@ describe("babili-pusher", () => {
     app = new App({
       port: 0,
       engine: { host: engine.host, port: engine.port },
-      headers: { hstsHeader: null },
-      redis: { url: redisUrl },
+      headers: { hstsHeader },
+      redis: { url: redisUrl, presenceTtlSeconds: 60 },
       authentication: { jwtAlgorithms: ["RS256"] }
     });
     app.logger.logger.silent = true;
@@ -214,6 +174,16 @@ describe("babili-pusher", () => {
 
       assert.deepEqual(await waitFor(bob.client, "new message"), expectedView);
       assert.deepEqual(otherPlatformMessages, []);
+    });
+  });
+
+  describe("HSTS", () => {
+    it("registers the header listener once whatever the number of connections", async() => {
+      await connectUser("alice");
+      await connectUser("bob");
+      await connectUser("carol");
+
+      assert.equal(app.socketServer.io.engine.listenerCount("headers"), 1);
     });
   });
 });

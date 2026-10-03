@@ -25,6 +25,12 @@ export class SocketServer {
     this.io.sockets.on("connection", (socket) => this._handleSocketConnection(socket));
 
     this.io.listen(this.app.config.port);
+
+    if (this.app.config?.headers?.hstsHeader) {
+      this.io.engine.on("headers", (headers) => {
+        headers["Strict-Transport-Security"] = this.app.config.headers.hstsHeader;
+      });
+    }
   }
 
   async _authenticateSocketConnection(socket, next) {
@@ -76,16 +82,14 @@ export class SocketServer {
     const platformId = socket.decodedToken.data.platformId;
     socket.deviceSessionId = uuidv4();
     await this.socketStore.add(userId, platformId, socket);
+    if (socket.disconnected) {
+      await this._handleDisconnection(userId, platformId, socket);
+      return;
+    }
     this.logger.info(`User <${userId}> just logged in`);
     socket.emit("connected", { deviceSessionId: socket.deviceSessionId });
     socket.on("ping", () => socket.emit("pong", {}));
     socket.on("disconnect", () => this._handleDisconnection(userId, platformId, socket));
-
-    if (this.app.config?.headers?.hstsHeader) {
-      this.io.engine.on("headers", (headers) => {
-        headers["Strict-Transport-Security"] = this.app.config.headers.hstsHeader;
-      });
-    }
   }
 
   async _handleDisconnection(userId, platformId, socket) {
@@ -94,6 +98,7 @@ export class SocketServer {
   }
 
   stop() {
+    this.socketStore.stop();
     this.io.close();
     this.logger.info("Socket listener stopped.");
   }

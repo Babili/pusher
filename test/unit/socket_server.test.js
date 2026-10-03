@@ -44,7 +44,8 @@ describe("SocketServer", () => {
       add: mock.fn(async() => true),
       remove: mock.fn(async() => undefined),
       get: mock.fn(() => undefined),
-      isPresent: mock.fn(async() => false)
+      isPresent: mock.fn(async() => false),
+      stop: mock.fn()
     };
   });
 
@@ -123,7 +124,6 @@ describe("SocketServer", () => {
     beforeEach(async() => {
       socket = createFakeSocket();
       socket.decodedToken = { sub: "bob", data: { platformId } };
-      server.io = { engine: { on: mock.fn() } };
       await server._handleSocketConnection(socket);
     });
 
@@ -144,23 +144,51 @@ describe("SocketServer", () => {
 
       assert.deepEqual(server.socketStore.remove.mock.calls[0].arguments, ["bob", platformId, socket]);
     });
+  });
+
+  describe("_handleSocketConnection when the client leaves during registration", () => {
+    it("unregisters the socket", async() => {
+      const socket = createFakeSocket();
+      socket.decodedToken = { sub: "bob", data: { platformId } };
+      socket.disconnected = false;
+      server.socketStore.add = mock.fn(async() => {
+        socket.disconnected = true;
+        return true;
+      });
+
+      await server._handleSocketConnection(socket);
+
+      assert.deepEqual(server.socketStore.remove.mock.calls[0]?.arguments, ["bob", platformId, socket]);
+    });
+  });
+
+  describe("start", () => {
+    afterEach(() => server.stop());
 
     it("does not add the HSTS header when it is not configured", () => {
-      assert.equal(server.io.engine.on.mock.callCount(), 0);
+      server.start();
+
+      assert.equal(server.io.engine.listenerCount("headers"), 0);
     });
 
-    it("adds the configured HSTS header", async() => {
+    it("adds the configured HSTS header to every response", () => {
       server.app.config.headers.hstsHeader = "max-age=31536000";
-      const headerSocket = createFakeSocket();
-      headerSocket.decodedToken = { sub: "alice", data: { platformId } };
-
-      await server._handleSocketConnection(headerSocket);
-      const [eventName, addHeaders] = server.io.engine.on.mock.calls[0].arguments;
+      server.start();
       const headers = {};
-      addHeaders(headers);
 
-      assert.equal(eventName, "headers");
+      server.io.engine.emit("headers", headers, {});
+
       assert.deepEqual(headers, { "Strict-Transport-Security": "max-age=31536000" });
+    });
+  });
+
+  describe("stop", () => {
+    it("stops refreshing presences", () => {
+      server.start();
+
+      server.stop();
+
+      assert.equal(server.socketStore.stop.mock.callCount(), 1);
     });
   });
 

@@ -6,12 +6,19 @@ export class SocketStore {
     this.redisPresenceStore = createClient({
       url: this.app.config.redis.url
     });
+    this.presenceTtlSeconds = this.app.config.redis.presenceTtlSeconds;
     this.store = {};
   }
 
   async connect() {
     this.redisPresenceStore.on("error", (err) => this.app.logger.err(`Error with Redis: ${err}`));
-    return await this.redisPresenceStore.connect();
+    const connection = await this.redisPresenceStore.connect();
+    this.presenceRefreshInterval = setInterval(() => this.refreshPresences(), this.presenceTtlSeconds * 1000 / 3);
+    return connection;
+  }
+
+  stop() {
+    clearInterval(this.presenceRefreshInterval);
   }
 
   key(userId, platformId) {
@@ -19,7 +26,7 @@ export class SocketStore {
   }
 
   async add(userId, platformId, socket) {
-    await this.redisPresenceStore.set(this.key(userId, platformId), new Date().toISOString());
+    await this.redisPresenceStore.set(this.key(userId, platformId), new Date().toISOString(), { EX: this.presenceTtlSeconds });
     const id = this.key(userId, platformId);
     this.store[id] = this.store[id] || [];
     this.store[id].push(socket);
@@ -35,15 +42,23 @@ export class SocketStore {
     return reply > 0;
   }
 
-  async remove(userId, platformId, socket) {
-    const userSockets = this.store[this.key(userId, platformId)];
+  async refreshPresences() {
+    try {
+      await Promise.all(Object.keys(this.store).map((key) => this.redisPresenceStore.expire(key, this.presenceTtlSeconds)));
+    } catch (error) {
+      this.app.logger.err(`Unable to refresh presences: ${error}`);
+    }
+  }
 
-    if (userSockets?.length > 1) {
-      const index = userSockets.indexOf(socket);
-      userSockets.splice(index, 1);
+  async remove(userId, platformId, socket) {
+    const id = this.key(userId, platformId);
+    const remainingSockets = (this.store[id] || []).filter((userSocket) => userSocket !== socket);
+
+    if (remainingSockets.length > 0) {
+      this.store[id] = remainingSockets;
     } else {
-      await this.redisPresenceStore.del(this.key(userId, platformId));
-      delete this.store[this.key(userId, platformId)];
+      await this.redisPresenceStore.del(id);
+      delete this.store[id];
     }
   }
 }

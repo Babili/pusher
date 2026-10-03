@@ -9,7 +9,8 @@ export const configuration = {
     hstsHeader: process.env.HSTS_HEADER || null
   },
   redis: {
-    url: process.env.REDIS_URL
+    url: process.env.REDIS_URL,
+    presenceTtlSeconds: parseInt(process.env.PRESENCE_TTL_SECONDS, 10) || 60
   },
   authentication: {
     jwtAudience: process.env.JWT_AUDIENCE,

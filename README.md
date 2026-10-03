@@ -14,6 +14,7 @@ Clockwork is a small trigger service to replace cron in a Docker environment.
 | `PORT` | `""`| String | Required | The websocket port | `"3000"` |
 | `NODE_ENV` | `""`| String | Required | The node environment | `"development"` |
 | `REDIS_URL` | `""`| String | Required | The websocket port | `"redis://redis/"` |
+| `PRESENCE_TTL_SECONDS` | `60`| Integer | Optional | How long a user stays present in Redis without being refreshed, e.g. after a crash of the pusher | `"60"` |
 | `ENGINE_HOST` | `""`| String | Required | The engine (container) hostname | `"3000"` |
 | `ENGINE_PORT` | `""`| String | Required | The engine port | `"3000"` |
 | `RABBITMQ_SCHEME` | `"amqp"`| String | Required | | `"amqps"` |

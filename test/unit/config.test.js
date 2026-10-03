@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { afterEach, describe, it } from "node:test";
 
-const variables = ["PORT", "ENGINE_HOST", "ENGINE_PORT", "SENTRY_DSN", "HSTS_HEADER", "REDIS_URL", "JWT_AUDIENCE", "JWT_ALGORITHMS"];
+const variables = ["PORT", "ENGINE_HOST", "ENGINE_PORT", "SENTRY_DSN", "HSTS_HEADER", "REDIS_URL", "PRESENCE_TTL_SECONDS", "JWT_AUDIENCE", "JWT_ALGORITHMS"];
 const initialEnvironment = Object.fromEntries(variables.map((name) => [name, process.env[name]]));
 
 let importCount = 0;
@@ -33,6 +33,7 @@ describe("configuration", () => {
       SENTRY_DSN: "https://key@sentry.example/1",
       HSTS_HEADER: "max-age=31536000",
       REDIS_URL: "redis://redis:6379",
+      PRESENCE_TTL_SECONDS: "120",
       JWT_AUDIENCE: "babili",
       JWT_ALGORITHMS: "RS256,RS512"
     });
@@ -42,15 +43,16 @@ describe("configuration", () => {
       engine: { host: "engine", port: "3001" },
       sentryDsn: "https://key@sentry.example/1",
       headers: { hstsHeader: "max-age=31536000" },
-      redis: { url: "redis://redis:6379" },
+      redis: { url: "redis://redis:6379", presenceTtlSeconds: 120 },
       authentication: { jwtAudience: "babili", jwtAlgorithms: ["RS256", "RS512"] }
     });
   });
 
-  it("only allows RS256 and sends no HSTS header by default", async() => {
+  it("only allows RS256, sends no HSTS header and keeps presence 60 seconds by default", async() => {
     const configuration = await loadConfiguration({});
 
     assert.deepEqual(configuration.authentication.jwtAlgorithms, ["RS256"]);
     assert.equal(configuration.headers.hstsHeader, null);
+    assert.equal(configuration.redis.presenceTtlSeconds, 60);
   });
 });
