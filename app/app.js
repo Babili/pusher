@@ -1,4 +1,4 @@
-import { Happn } from "happn";
+import { Happn } from "@crepesourcing/happn";
 import { Logger } from "./logger.js";
 import { MessageProjector } from "./server/message_projector.js";
 import { SocketServer } from "./server/socket_server.js";

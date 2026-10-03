@@ -1,4 +1,4 @@
-import happn from "happn";
+import happn from "@crepesourcing/happn";
 const { Projector } = happn;
 
 export class MessageProjector extends Projector {
