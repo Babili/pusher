@@ -3,7 +3,7 @@ name: Test, Build and Push Docker Image
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 
 permissions:

@@ -1,4 +1,4 @@
-# Babili Pusher <a href="https://github.com/Babili/pusher/actions/workflows/docker-publish.yml">![Build status](https://github.com/Babili/pusher/actions/workflows/docker-publish.yml/badge.svg?branch=master)</a>
+# Babili Pusher <a href="https://github.com/Babili/pusher/actions/workflows/docker-publish.yml">![Build status](https://github.com/Babili/pusher/actions/workflows/docker-publish.yml/badge.svg?branch=main)</a>
 
 
 Babili is a real-time chat backend built with Ruby, Rails, Node, Socket.io and Docker.
@@ -31,7 +31,7 @@ Babili is the product of the Collaboration of the Spin42 team (http://spin42.com
 
 ## Build and deploy
 
-Every push to `master` is linted, built and pushed to Docker Hub by the GitHub Actions workflow `.github/workflows/docker-publish.yml`. It requires the repository secrets `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`.
+Every push to `main` is linted, built and pushed to Docker Hub by the GitHub Actions workflow `.github/workflows/docker-publish.yml`. It requires the repository secrets `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`.
 
 Builds can also be deployed manually with:
 
