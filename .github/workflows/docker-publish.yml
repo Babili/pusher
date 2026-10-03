@@ -76,6 +76,10 @@ jobs:
     strategy:
       matrix:
         app_env: [production, qa, development]
+        variant:
+          - { dockerfile: Dockerfile, suffix: "" }
+          - { dockerfile: Dockerfile.hardened, suffix: "-hardened" }
+          - { dockerfile: Dockerfile.distroless, suffix: "-distroless" }
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -98,21 +102,22 @@ jobs:
         with:
           images: babili/pusher
           tags: |
-            type=sha,format=long,prefix=${{ matrix.app_env }}-
-            type=raw,value=${{ matrix.app_env }}-latest
+            type=sha,format=long,prefix=${{ matrix.app_env }}-,suffix=${{ matrix.variant.suffix }}
+            type=raw,value=${{ matrix.app_env }}-latest${{ matrix.variant.suffix }}
 
       - name: Build and push Docker image with Provenance
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: ${{ matrix.variant.dockerfile }}
           platforms: linux/arm64/v8,linux/amd64
           pull: true
           push: true
           build-args: APP_ENV=${{ matrix.app_env }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=babili/pusher:buildcache-${{ matrix.app_env }}
-          cache-to: type=registry,ref=babili/pusher:buildcache-${{ matrix.app_env }},mode=max
+          cache-from: type=registry,ref=babili/pusher:buildcache-${{ matrix.app_env }}${{ matrix.variant.suffix }}
+          cache-to: type=registry,ref=babili/pusher:buildcache-${{ matrix.app_env }}${{ matrix.variant.suffix }},mode=max
 
           # Generate SLSA Provenance and SBOM
           provenance: mode=max

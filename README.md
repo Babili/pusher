@@ -30,6 +30,24 @@ Clockwork is a small trigger service to replace cron in a Docker environment.
 
 Babili is the product of the Collaboration of the Spin42 team (http://spin42.com) and the Commuty one (https://www.commuty.net).
 
+## Docker images
+
+Three variants of the image are published for `linux/amd64` and `linux/arm64`, for each environment (`production`, `qa` and `development`):
+
+| Variant | Dockerfile | Tags | Description |
+| ---- | ----- | ------ | ----- |
+| Default | `Dockerfile` | `<env>-latest`, `<env>-<sha>` | Full Debian image with development dependencies |
+| Debian hardened | `Dockerfile.hardened` | `<env>-latest-hardened`, `<env>-<sha>-hardened` | Slim Debian image with production dependencies only, without npm, Yarn, Corepack and setuid binaries, running as `node` |
+| Distroless | `Dockerfile.distroless` | `<env>-latest-distroless`, `<env>-<sha>-distroless` | Distroless image with production dependencies only, without shell nor package manager, running as `nonroot` |
+
+The hardened and distroless images can run with a read-only root filesystem and without capabilities:
+
+```
+$ docker run --read-only --cap-drop ALL --security-opt no-new-privileges babili/pusher:production-latest-distroless
+```
+
+Their base images are pinned by digest: update the digests when upgrading Node.js.
+
 ## Build and deploy
 
 Every push to `main` is linted, built and pushed to Docker Hub by the GitHub Actions workflow `.github/workflows/docker-publish.yml`. It requires the repository secrets `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`.

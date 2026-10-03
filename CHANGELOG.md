@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Publish Debian hardened (`-hardened`) and distroless (`-distroless`) Docker images
 * Move `@sentry/node` to production dependencies, as it is loaded at startup
 
 ## 2.1.0 [2026-10-03]

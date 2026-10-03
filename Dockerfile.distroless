@@ -1,0 +1,19 @@
+FROM node:24.21.0-trixie-slim@sha256:8ec5d7557396cfe32d21c3f9c13072355ceab22b584578ca4bb28af31120cffe AS build
+
+WORKDIR /usr/src/app
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev --ignore-scripts
+COPY babili_pusher.js ./
+COPY app app
+COPY config config
+
+
+FROM gcr.io/distroless/nodejs24-debian13:nonroot@sha256:9eeb7f5887d0e239e78264b06f7f11d2e14be534050481803a9e4728fcdd278e
+
+WORKDIR /usr/src/app
+COPY --from=build /usr/src/app ./
+
+ARG APP_ENV=development
+ENV NODE_ENV=${APP_ENV}
+
+CMD ["babili_pusher.js"]
