@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased
+
+* Add a GitHub Actions workflow to lint, build and push Docker images
+* Upgrade Node.js from `22.6.0` to `24.21.0`
+* Upgrade dependencies:
+    * `amqplib` from `0.10.9` to `2.2.0`
+    * `engine.io` from `6.6.5` to `6.6.11` (security fixes)
+    * `redis` from `5.5.5` to `6.3.0`
+    * `socket.io` from `4.8.3` to `4.8.4`
+    * `uuid` from `11.1.0` to `14.0.2`
+* Upgrade dev dependencies:
+    * `@sentry/node` from `9.47.1` to `11.4.0`
+    * `eslint` from `9.39.2` to `10.12.0`
+    * `eslint-plugin-n` from `17.23.2` to `18.4.1`
+    * `eslint-plugin-promise` from `7.2.1` to `7.3.0`
+    * `eslint-plugin-unused-imports` from `4.1.4` to `4.4.1`
+* Add `@eslint/js` dev dependency
+* Remove unused `eslint-plugin-import` dev dependency
+
 ## 2.0.3 [2026-01-15]
 
 * Fix JWT token exchange handshake

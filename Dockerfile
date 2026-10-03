@@ -1,4 +1,4 @@
-FROM node:22.6.0-bookworm
+FROM node:24.21.0-bookworm
 
 RUN mkdir -p /usr/src/app && \
   groupadd -r babili && useradd -r -g babili babili && \
