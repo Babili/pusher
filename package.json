@@ -3,7 +3,7 @@
   "description": "Handle socket.io live stream for Babili.",
   "author": "Spin42 <info@spin42.com>, Commuty <info@commuty.net>",
   "private": true,
-  "version": "2.0.3",
+  "version": "2.1.0",
   "type": "module",
   "dependencies": {
     "@crepesourcing/happn": "1.0.1",

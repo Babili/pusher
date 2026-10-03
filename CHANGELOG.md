@@ -1,7 +1,15 @@
 # Changelog
 
-## Unreleased
+## 2.1.0 [2026-10-03]
 
+* Reject socket connections when the platform public key cannot be fetched
+* Expire user presence in Redis after `PRESENCE_TTL_SECONDS` (60 seconds by default) when it is no longer refreshed, e.g. after a crash
+* Send the HSTS header from the first handshake and register its listener once
+* Fix the removal of disconnected sockets
+* Fix Redis error logging
+* Fix graceful shutdown on `SIGINT` and `SIGTERM`, including in Docker containers
+* Add unit and integration tests, run in the GitHub Actions workflow
+* Replace the `happn` git dependency with `@crepesourcing/happn` `1.0.1` from npm
 * Add a GitHub Actions workflow to lint, build and push Docker images
 * Upgrade Node.js from `22.6.0` to `24.21.0`
 * Upgrade dependencies:
@@ -16,7 +24,7 @@
     * `eslint-plugin-n` from `17.23.2` to `18.4.1`
     * `eslint-plugin-promise` from `7.2.1` to `7.3.0`
     * `eslint-plugin-unused-imports` from `4.1.4` to `4.4.1`
-* Add `@eslint/js` dev dependency
+* Add `@eslint/js` and `socket.io-client` dev dependencies
 * Remove unused `eslint-plugin-import` dev dependency
 
 ## 2.0.3 [2026-01-15]
