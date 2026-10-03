@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.1.1 [2026-10-03]
 
 * Publish Debian hardened (`-hardened`) and distroless (`-distroless`) Docker images
 * Move `@sentry/node` to production dependencies, as it is loaded at startup
