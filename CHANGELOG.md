@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+* Move `@sentry/node` to production dependencies, as it is loaded at startup
+
 ## 2.1.0 [2026-10-03]
 
 * Reject socket connections when the platform public key cannot be fetched
