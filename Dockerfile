@@ -19,4 +19,4 @@ COPY babili_pusher.js babili_pusher.js
 ARG APP_ENV=development
 ENV NODE_ENV ${APP_ENV}
 
-CMD ["npm", "start"]
+CMD ["node", "babili_pusher.js"]
