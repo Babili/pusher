@@ -11,6 +11,7 @@
 * Add unit and integration tests, run in the GitHub Actions workflow
 * Replace the `happn` git dependency with `@crepesourcing/happn` `1.0.1` from npm
 * Add a GitHub Actions workflow to lint, build and push Docker images
+* Stop building `linux/arm/v7` images, as Node.js 24 has no official image for this platform
 * Upgrade Node.js from `22.6.0` to `24.21.0`
 * Upgrade dependencies:
     * `amqplib` from `0.10.9` to `2.2.0`
